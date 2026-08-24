@@ -19,5 +19,16 @@ inc %>%
   )
 
 
-
+# Standardise before exporting the age-specific cells
+if (exists("executeAgeStandardisation") && executeAgeStandardisation) {
+  log4r::info(logger, "Age-standardise incidence")
+  exportStandardisedIncidence(
+    incidenceResult = inc,
+    standardPopulations = standardPopulations,
+    minimumCounts = minimum_counts,
+    standardisationAgeGroups = names(ageGroupList),
+    fileName = paste0(db_name, "_incidence_age_standardised.csv"),
+    path = output_folder
+  )
+}
   

@@ -49,19 +49,19 @@ if (!grepl("NAJS", db_name, ignore.case=TRUE)){
   #NAJS must consider only confirmed diagnoses (from registry)
   log4r::info(logger, "Consider confirmed diagnoses for NAJS")
   #Filter confirmed diagnoses
-  cdm$conditions_registry = cdm$condition_occurrence %>% 
-    filter(condition_start_date >= startdate & condition_start_date <= enddate) %>% #Filter study period
-    filter(condition_status_concept_id ==32893 & condition_type_concept_id == 32879) %>%  #Filter confirmed registry diagnosis
+  cdm$conditions_registry = cdm$condition_occurrence |> 
+    filter(condition_start_date >= startdate & condition_start_date <= enddate) |> #Filter study period
+    filter(condition_status_concept_id ==32893 & condition_type_concept_id == 32879) |>  #Filter confirmed registry diagnosis
     compute(name = "conditions_registry", overwrite = TRUE)
   #Leave only exclusion records that are confirmed
-  cdm$exclusion <- cdm$exclusion %>% 
+  cdm$exclusion <- cdm$exclusion |> 
     CohortConstructor::requireTableIntersect(
       tableName = "conditions_registry",
       window = c(0,0),
       intersections = c(1,Inf),,
       targetStartDate = "condition_start_date",
       targetEndDate = "condition_start_date"
-    ) %>% 
+    ) |> 
     compute(name= "exclusion", overwrite=TRUE)
   #Instantiate all cancers
   log4r::info(logger, "Instantiate cancer cohorts")
@@ -79,20 +79,20 @@ if (!grepl("NAJS", db_name, ignore.case=TRUE)){
     overlap = "merge",
     inObservation = TRUE,
     table = "condition_occurrence"
-  ) %>%
+  ) |>
     compute(name= "outcome_all", overwrite=TRUE)
   #Intersect concept cohort with conditions recorded from cancer registry only
-  cdm$outcome_all <-cdm$outcome_all %>% 
+  cdm$outcome_all <-cdm$outcome_all |> 
     CohortConstructor::requireTableIntersect(
       tableName = "conditions_registry",
       window = c(0,0),
       intersections = c(1,Inf),,
       targetStartDate = "condition_start_date",
       targetEndDate = "condition_start_date"
-    ) %>% 
+    ) |> 
     compute(name= "outcome_all", overwrite=TRUE)
   #Filter first record per cancer and set cohort_end to end of observation period
-  cdm$outcome_all <- cdm$outcome_all %>% 
+  cdm$outcome_all <- cdm$outcome_all |> 
     CohortConstructor::exitAtObservationEnd() 
 }
 
@@ -140,7 +140,7 @@ if(!isRegistry){
     overwrite = TRUE
   )
   
-  cdm <- cdm$conditions_chronic %>%
+  cdm <- cdm$conditions_chronic |>
     omopgenerics::bind(cdm$conditions_acute, name="conditions_all")
   
   # instantiate obesity using diagnosis and measurements and bind to "conditions_all"
@@ -155,12 +155,12 @@ if(!isRegistry){
     computeAttrition = TRUE,
     overwrite = TRUE
   )
-  cdm <- cdm$conditions_all %>%
+  cdm <- cdm$conditions_all |>
     omopgenerics::bind(cdm$obesity, name="conditions_all")
   
   # instantiate menopausal status  and bind to "conditions_all"
   log4r::info(logger, "Instantiate menopausal status")
-  cdm[["menopausal_status"]] <- cdm %>% 
+  cdm[["menopausal_status"]] <- cdm |> 
     CohortConstructor::demographicsCohort(
       name = "menopausal_status",
       ageRange = c(50, 150),
@@ -168,7 +168,7 @@ if(!isRegistry){
       minPriorObservation = daysPriorObservation
     ) |> 
     CohortConstructor::renameCohort(cohortId=1, newCohortName="menopausal_status")
-  cdm <- cdm$conditions_all %>% 
+  cdm <- cdm$conditions_all |> 
     omopgenerics::bind(cdm$menopausal_status, name="conditions_all")  
   
   # instantiate tobacco smoking and bind to "conditions_all"
@@ -183,10 +183,14 @@ if(!isRegistry){
     computeAttrition = TRUE,
     overwrite = TRUE
   )
-  cdm <- cdm$conditions_all %>% 
+  cdm <- cdm$conditions_all |> 
     omopgenerics::bind(cdm$tobacco, name="conditions_all")
+} 
+
+# instantiate medications -------------------------------------------------------
+cdm <- omopgenerics::emptyCohortTable(cdm, name="medications", overwrite = TRUE)
+if(!omopgenerics::isTableEmpty(cdm$drug_exposure)){
   
-  # instantiate medications -------------------------------------------------------
   log4r::info(logger, "Instantiate medications")
   codelistMedications <- CodelistGenerator::codesFromConceptSet(
     here::here("extras","1_InstantiateCohorts", "Cohorts","Medications"), 
@@ -198,4 +202,8 @@ if(!isRegistry){
     gapEra = 30,
     name = "medications"
   )
-} 
+  
+}
+  
+  
+
