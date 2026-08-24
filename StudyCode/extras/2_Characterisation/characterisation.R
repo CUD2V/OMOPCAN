@@ -9,7 +9,7 @@ cdm$outcome %>%
   omopgenerics::exportSummarisedResult(
     minCellCount = minimum_counts,
     path = output_folder,
-    fileName = paste0(omopgenerics::cdmName(cdm), "_summarise_characteristics_1demographics.csv")
+    fileName = paste0(db_name, "_summarise_characteristics_1demographics.csv")
   )
 
 
@@ -90,7 +90,7 @@ if(!isRegistry){
       omopgenerics::exportSummarisedResult(
         minCellCount = minimum_counts,
         path = output_folder,
-        fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_characteristics_2cond_drugs.csv")
+        fileName = paste0(db_name,"_summarise_characteristics_2cond_drugs.csv")
       )
     
   }else if(!omopgenerics::isTableEmpty(cdm$conditions_all)){
@@ -123,7 +123,7 @@ if(!isRegistry){
       omopgenerics::exportSummarisedResult(
         minCellCount = minimum_counts,
         path = output_folder,
-        fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_characteristics_2conditions.csv")
+        fileName = paste0(db_name,"_summarise_characteristics_2conditions.csv")
       )
   }else if(!omopgenerics::isTableEmpty(cdm$medications)){
     log4r::info(logger, "Summarise charactertistics: medications") 
@@ -154,7 +154,7 @@ if(!isRegistry){
       omopgenerics::exportSummarisedResult(
         minCellCount = minimum_counts,
         path = output_folder,
-        fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_characteristics_2drugs.csv")
+        fileName = paste0(db_name,"_summarise_characteristics_2drugs.csv")
         )
   }
   
@@ -174,7 +174,7 @@ if(!isRegistry){
     omopgenerics::exportSummarisedResult(
       minCellCount = minimum_counts,
       path = output_folder,
-      fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_large_scale_characteristics_conditions.csv")
+      fileName = paste0(db_name,"_summarise_large_scale_characteristics_conditions.csv")
     )
     
   log4r::info(logger, "Large scale characterisation: medications")
@@ -194,7 +194,7 @@ if(!isRegistry){
     omopgenerics::exportSummarisedResult(
       minCellCount = minimum_counts,
       path = output_folder,
-      fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_large_scale_characteristics_drugs.csv")
+      fileName = paste0(db_name,"_summarise_large_scale_characteristics_drugs.csv")
       )
 }else{
   # Registries characterization of medications on index date and 1-90 days after
@@ -222,7 +222,7 @@ if(!isRegistry){
       omopgenerics::exportSummarisedResult(
         minCellCount = minimum_counts,
         path = output_folder,
-        fileName = paste0(omopgenerics::cdmName(cdm),"_summarise_characteristics_2drugs.csv")
+        fileName = paste0(db_name,"_summarise_characteristics_2drugs.csv")
       )
     
     log4r::info(logger,"Large scale registry medication characterisation")
@@ -239,7 +239,7 @@ if(!isRegistry){
       omopgenerics::exportSummarisedResult(
         minCellCount = minimum_counts,
         path = output_folder,
-        fileName = paste0(omopgenerics::cdmName(cdm), "_summarise_large_scale_characteristics_drugs.csv")
+        fileName = paste0(db_name, "_summarise_large_scale_characteristics_drugs.csv")
       )
   }else{
     log4r::info(logger,"No medication records available for registry characterisation")
