@@ -3,6 +3,7 @@ if(!exists("executeCharacterisation")){executeCharacterisation <- TRUE}
 if(!exists("executeIncidence")){executeIncidence <- TRUE}
 if(!exists("executePrevalence")){executePrevalence <- TRUE}
 if(!exists("executeSurvival")){executeSurvival <- TRUE}
+if(!exists("executeAgeStandardisation")){executeAgeStandardisation <- TRUE}
 
 if(!exists("minimum_counts")){minimum_counts <- 10}
 
@@ -67,6 +68,11 @@ ageGroupList = list(
   "90 to 99" = c(90, 99),
   "100 +" = c(100, 150)
 )
+ageGroupListBroad = list(
+  "0 to 19" = c(0, 19),
+  "20 to 49" = c(20, 49),
+  "50 +" = c(50, 150)
+)
 sexGroup = c("Both", "Male", "Female")
 daysPriorObservation = 365
 date_ranges <- list(
@@ -83,7 +89,20 @@ if(isHospital){
   executePrevalence <- FALSE
 }
 
+if(executeAgeStandardisation){
+  source(here::here( "extras","Standardisation", "age_standardisation.R"))
+  standardPopulations <- readStandardPopulations()
+}
+
+if(toupper(db_name) == "SIDIAP"){
+  log4r::info(logger,"Filter SIDIAP drug_exposure keeping only prescriptions")
+  cdm$drug_exposure <- cdm$drug_exposure |>
+    filter(drug_type_concept_id == 32839)
+}
+
+
 # Get groups of cancer "cancerTypes"
+log4r::info(logger,"Get cancer groups and stratification variables")
 source(here::here("extras/cancerGroups.R"))
 cancer_types <- cancer_types[cancersToRun]
 
@@ -97,14 +116,14 @@ if (executeInstantiateCohorts) {
 # Compute cohort counts --------------------------------------------------------
 log4r::info(logger, "Get cohort counts")
 
-cancer_counts <- cdm$outcome_all %>% 
-  omopgenerics::settings() %>% 
-  left_join(cdm$outcome_all %>% omopgenerics::cohortCount(), by="cohort_definition_id") %>% 
+cancer_counts <- cdm$outcome_all |> 
+  omopgenerics::settings() |> 
+  left_join(cdm$outcome_all |> omopgenerics::cohortCount(), by="cohort_definition_id") |> 
   select(cohort_definition_id, cohort_name, number_subjects)
 
-covariable_counts <- cdm$conditions_all %>% 
-  omopgenerics::settings() %>% 
-  left_join(cdm$conditions_all %>% omopgenerics::cohortCount(), by="cohort_definition_id") %>% 
+covariable_counts <- cdm$conditions_all |> 
+  omopgenerics::settings() |> 
+  left_join(cdm$conditions_all |> omopgenerics::cohortCount(), by="cohort_definition_id") |> 
   select(cohort_definition_id, cohort_name, number_subjects)
 
 # Loop over each group  ---------------------------------------------------------
@@ -113,20 +132,20 @@ if (any(cancer_counts$number_subjects > minimum_counts, na.rm = TRUE)) {
     log4r::info(logger, "------------------------------------------------------")
     log4r::info(logger, paste0("RUNNING ANALYSIS FOR ", toupper(cancer_group)," CANCERS"))
     log4r::info(logger, "------------------------------------------------------")
-       
+
     #Get cancer types in the current GROUP
-    cancer_types_gr <-  cancer_counts %>% 
-      filter(cohort_name %in% cancer_types[[cancer_group]]$types) %>% 
+    cancer_types_gr <-  cancer_counts |> 
+      filter(cohort_name %in% cancer_types[[cancer_group]]$types) |> 
       filter(number_subjects > minimum_counts )
     
     if(nrow(cancer_types_gr)>0) {
-
+      
       output_folder <-  paste0(final_output_folder, "/", cancer_group)
       if (!dir.exists(output_folder)) {
         dir.create(output_folder, recursive = TRUE)
       }
-    
-      snapshot %>% 
+      
+      snapshot |> 
         omopgenerics::exportSummarisedResult(
           minCellCount = NULL, 
           fileName =  paste0(db_name,"_summarise_omop_snapshot.csv"),
@@ -142,7 +161,8 @@ if (any(cancer_counts$number_subjects > minimum_counts, na.rm = TRUE)) {
       }
       if (executeIncidence) {
         log4r::info(logger, "STEP 3 INCIDENCE -------------------------------------")
-        source(here::here("extras/3_Incidence/incidence.R"))
+        # source(here::here("extras/3_Incidence/incidence.R"))
+        source(here::here("extras/3_Incidence/incidence_opt.R"))
       }
       if (executePrevalence) {
         log4r::info(logger, "STEP 4 PREVALENCE ------------------------------------")

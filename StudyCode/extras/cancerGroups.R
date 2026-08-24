@@ -1,5 +1,3 @@
-log4r::info(logger, "Get cancer groups and stratification variables")
-
 cancer_types = list()
 
 cancer_types[["respiratory"]] = list(
