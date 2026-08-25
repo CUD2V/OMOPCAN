@@ -478,40 +478,23 @@ exportStandardisedSurvival <- function(
     minimumCounts,
     fileName,
     path) {
-  temporaryPath <- tempfile("survival_standardised_")
-  dir.create(temporaryPath)
-
-  exported <- lapply(seq_along(results), function(i) {
-    temporaryFile <- paste0("result_", i, ".csv")
-    results[[i]] |>
-      omopgenerics::exportSummarisedResult(
-        minCellCount = minimumCounts,
-        fileName = temporaryFile,
-        path = temporaryPath
-      )
-    utils::read.csv(
-      file.path(temporaryPath, temporaryFile),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
-    )
-  })
-
-  nextResultId <- 0L
-  exported <- lapply(exported, function(result) {
-    if("result_id" %in% colnames(result)){
-      resultIds <- unique(result$result_id)
-      result$result_id <- match(result$result_id, resultIds) + nextResultId
-      nextResultId <<- nextResultId + length(resultIds)
+  
+  surv_all <- NULL
+  for(rname in names(results)){
+    surv_i <- results[[rname]] |> 
+      CohortSurvival::asSurvivalResult() |> 
+      mutate(std_name = rname)
+    if(is.null(surv_all)){
+      surv_all <- surv_i
+    }else{
+      surv_all <- bind_rows(surv_all, surv_i) 
     }
-    result
-  })
-  exported <- bind_rows(exported)
-
+  }
+  
   utils::write.csv(
-    exported,
+    surv_all,
     file = file.path(path, fileName),
     row.names = FALSE,
     na = ""
   )
-  invisible(exported)
 }
