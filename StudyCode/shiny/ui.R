@@ -451,8 +451,8 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_grouping_cdm_name",
               label = "Cdm name",
-              choices = filterValues$summarise_characteristics_demographics_grouping_cdm_name,
-              selected = filterValues$summarise_characteristics_demographics_grouping_cdm_name,
+              choices = filterValues$summarise_characteristics_grouping_cdm_name,
+              selected = filterValues$summarise_characteristics_grouping_cdm_name,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             ),
@@ -467,15 +467,23 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_grouping_cohort_name",
               label = "Cohort name",
-              choices = filterValues$summarise_characteristics_demographics_grouping_cohort_name,
-              selected = filterValues$summarise_characteristics_demographics_grouping_cohort_name,
+              choices = filterValues$summarise_characteristics_grouping_cohort_name,
+              selected = filterValues$summarise_characteristics_grouping_cohort_name,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             ),
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_grouping_age_gr",
               label = "Age group",
-              choices = filterValues$summarise_characteristics_demographics_grouping_age_gr,
+              choices = filterValues$summarise_characteristics_grouping_age_gr,
+              selected = "overall",
+              multiple = TRUE,
+              options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+            ),
+            shinyWidgets::pickerInput(
+              inputId = "summarise_characteristics_demographics_grouping_age_gr_broad",
+              label = "Age group broad",
+              choices = filterValues$summarise_characteristics_grouping_age_gr_broad,
               selected = "overall",
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -483,7 +491,7 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_grouping_sex",
               label = "Sex",
-              choices = filterValues$summarise_characteristics_demographics_grouping_sex,
+              choices = filterValues$summarise_characteristics_grouping_sex,
               selected = "overall",
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -492,8 +500,8 @@ ui <- bslib::page_navbar(
             # shinyWidgets::pickerInput(
             #   inputId = "summarise_characteristics_demographics_grouping_window",
             #   label = "Window",
-            #   choices = filterValues$summarise_characteristics_demographics_grouping_window,
-            #   selected = filterValues$summarise_characteristics_demographics_grouping_window,
+            #   choices = filterValues$summarise_characteristics_grouping_window,
+            #   selected = filterValues$summarise_characteristics_grouping_window,
             #   multiple = TRUE,
             #   options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             # )
@@ -503,8 +511,8 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_variable_name",
               label = "Variable name",
-              choices = filterValues$summarise_characteristics_demographics_variable_name,
-              selected = filterValues$summarise_characteristics_demographics_variable_name,
+              choices = filterValues$summarise_characteristics_variable_name,
+              selected = filterValues$summarise_characteristics_variable_name,
               multiple = TRUE,
               options = list(
                 `actions-box` = TRUE,
@@ -520,8 +528,8 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_demographics_estimate_name",
               label = "Estimate name",
-              choices = filterValues$summarise_characteristics_demographics_estimate_name,
-              selected = filterValues$summarise_characteristics_demographics_estimate_name,
+              choices = filterValues$summarise_characteristics_estimate_name,
+              selected = filterValues$summarise_characteristics_estimate_name,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             )
@@ -569,7 +577,7 @@ ui <- bslib::page_navbar(
                   header = NULL,
                   sortable::add_rank_list(
                     text = "none",
-                    labels = setdiff(filterValues$summarise_characteristics_demographics_tidy_columns, c("cohort_name", "cdm_name")),
+                    labels = setdiff(filterValues$summarise_characteristics_tidy_columns, c("cohort_name", "cdm_name")),
                     input_id = "summarise_characteristics_demographics_gt_7_none"
                   ),
                   sortable::add_rank_list(
@@ -611,8 +619,8 @@ ui <- bslib::page_navbar(
                 shinyWidgets::pickerInput(
                   inputId = "summarise_characteristics_demographics_tidy_columns",
                   label = "Columns",
-                  choices = filterValues$summarise_characteristics_demographics_tidy_columns,
-                  selected = filterValues$summarise_characteristics_demographics_tidy_columns,
+                  choices = filterValues$summarise_characteristics_tidy_columns,
+                  selected = filterValues$summarise_characteristics_tidy_columns,
                   multiple = TRUE,
                   options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3")
                 ),
@@ -680,7 +688,7 @@ ui <- bslib::page_navbar(
                   label = "facet",
                   selected = NULL,
                   multiple = TRUE,
-                  choices = filterValues$summarise_characteristics_demographics_tidy_columns,
+                  choices = filterValues$summarise_characteristics_tidy_columns,
                   options = list(
                     `actions-box` = TRUE, 
                     size = 7, 
@@ -694,7 +702,7 @@ ui <- bslib::page_navbar(
                   label = "colour",
                   selected = NULL,
                   multiple = TRUE,
-                  choices = filterValues$summarise_characteristics_demographics_tidy_columns,
+                  choices = filterValues$summarise_characteristics_tidy_columns,
                   options = list(
                     `actions-box` = TRUE, 
                     size = 7, 
@@ -723,8 +731,8 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_cdm_name",
               label = "Cdm name",
-              choices = filterValues$summarise_characteristics_clinical_grouping_cdm_name,
-              selected = filterValues$summarise_characteristics_clinical_grouping_cdm_name,
+              choices = filterValues$summarise_characteristics_grouping_cdm_name,
+              selected = filterValues$summarise_characteristics_grouping_cdm_name,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             ),
@@ -739,19 +747,19 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_cohort_name",
               label = "Cohort name",
-              choices = filterValues$summarise_characteristics_clinical_grouping_cohort_name,
-              selected = filterValues$summarise_characteristics_clinical_grouping_cohort_name,
+              choices = filterValues$summarise_characteristics_grouping_cohort_name,
+              selected = filterValues$summarise_characteristics_grouping_cohort_name,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             ),
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_table",
               label = "Characteristics",
-              choices = filterValues$summarise_characteristics_clinical_grouping_table[
-                filterValues$summarise_characteristics_clinical_grouping_table != c("overall")
+              choices = filterValues$summarise_characteristics_grouping_table[
+                filterValues$summarise_characteristics_grouping_table != c("overall")
               ],
-              selected = filterValues$summarise_characteristics_clinical_grouping_table[
-                filterValues$summarise_characteristics_clinical_grouping_table != c("overall")
+              selected = filterValues$summarise_characteristics_grouping_table[
+                filterValues$summarise_characteristics_grouping_table != c("overall")
               ],
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -759,8 +767,8 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_window",
               label = "Window",
-              choices = filterValues$summarise_characteristics_clinical_grouping_window,
-              selected = filterValues$summarise_characteristics_clinical_grouping_window,
+              choices = filterValues$summarise_characteristics_grouping_window,
+              selected = filterValues$summarise_characteristics_grouping_window,
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
             )
@@ -770,7 +778,15 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_age_gr",
               label = "Age group",
-              choices = filterValues$summarise_characteristics_clinical_grouping_age_gr,
+              choices = filterValues$summarise_characteristics_grouping_age_gr,
+              selected = "overall",
+              multiple = TRUE,
+              options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+            ),
+            shinyWidgets::pickerInput(
+              inputId = "summarise_characteristics_clinical_grouping_age_gr_broad",
+              label = "Age group broad",
+              choices = filterValues$summarise_characteristics_grouping_age_gr_broad,
               selected = "overall",
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -778,7 +794,7 @@ ui <- bslib::page_navbar(
             shinyWidgets::pickerInput(
               inputId = "summarise_characteristics_clinical_grouping_sex",
               label = "Sex",
-              choices = filterValues$summarise_characteristics_clinical_grouping_sex,
+              choices = filterValues$summarise_characteristics_grouping_sex,
               selected = "overall",
               multiple = TRUE,
               options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -827,7 +843,7 @@ ui <- bslib::page_navbar(
                   header = NULL,
                   sortable::add_rank_list(
                     text = "none",
-                    labels = setdiff(filterValues$summarise_characteristics_clinical_tidy_columns, c("cohort_name", "cdm_name", "table")),
+                    labels = setdiff(filterValues$summarise_characteristics_tidy_columns, c("cohort_name", "cdm_name", "table")),
                     input_id = "summarise_characteristics_clinical_gt_7_none"
                   ),
                   sortable::add_rank_list(
@@ -869,8 +885,8 @@ ui <- bslib::page_navbar(
                 shinyWidgets::pickerInput(
                   inputId = "summarise_characteristics_clinical_tidy_columns",
                   label = "Columns",
-                  choices = filterValues$summarise_characteristics_clinical_tidy_columns,
-                  selected = filterValues$summarise_characteristics_clinical_tidy_columns,
+                  choices = filterValues$summarise_characteristics_tidy_columns,
+                  selected = filterValues$summarise_characteristics_tidy_columns,
                   multiple = TRUE,
                   options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3")
                 ),
@@ -1149,10 +1165,10 @@ ui <- bslib::page_navbar(
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "incidence_grouping_analysis_interval",
+                inputId = "incidence_settings_analysis_interval",
                 label = "Analysis interval",
-                choices = filterValues$incidence_grouping_analysis_interval,
-                selected = filterValues$incidence_grouping_analysis_interval[1],
+                choices = filterValues$incidence_settings_analysis_interval,
+                selected = filterValues$incidence_settings_analysis_interval[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -1895,8 +1911,8 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_cdm_name",
                 label = "Cdm name",
-                choices = filterValues$survival_summary_grouping_cdm_name,
-                selected = filterValues$survival_summary_grouping_cdm_name[1],
+                choices = filterValues$survival_grouping_cdm_name,
+                selected = filterValues$survival_grouping_cdm_name[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -1911,24 +1927,24 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_target_cohort",
                 label = "Target cohort",
-                choices = filterValues$survival_summary_grouping_target_cohort,
-                selected = filterValues$survival_summary_grouping_target_cohort,
+                choices = filterValues$survival_grouping_target_cohort,
+                selected = filterValues$survival_grouping_target_cohort,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_study_period",
                 label = "Study Period",
-                choices = filterValues$survival_summary_grouping_study_period,
-                selected = filterValues$survival_summary_grouping_study_period[1],
+                choices = filterValues$survival_grouping_study_period,
+                selected = filterValues$survival_grouping_study_period[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_year",
                 label = "Survival year",
-                choices = filterValues$survival_summary_grouping_year,
-                selected = filterValues$survival_summary_grouping_year[1],
+                choices = filterValues$survival_grouping_year,
+                selected = filterValues$survival_grouping_year[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               )
@@ -1938,16 +1954,24 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_age_gr",
                 label = "Age group",
-                choices = filterValues$survival_summary_grouping_age_gr,
-                selected = filterValues$survival_summary_grouping_age_gr[1],
+                choices = filterValues$survival_grouping_age_gr,
+                selected = filterValues$survival_grouping_age_gr[1],
+                multiple = TRUE,
+                options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+              ),
+              shinyWidgets::pickerInput(
+                inputId = "survival_summary_grouping_age_gr_broad",
+                label = "Age group broad",
+                choices = filterValues$survival_grouping_age_gr_broad,
+                selected = filterValues$survival_grouping_age_gr_broad[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_grouping_sex",
                 label = "Sex",
-                choices = filterValues$survival_summary_grouping_sex,
-                selected = filterValues$survival_summary_grouping_sex[1],
+                choices = filterValues$survival_grouping_sex,
+                selected = filterValues$survival_grouping_sex[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -1970,8 +1994,8 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_summary_estimate_name",
                 label = "Estimate name",
-                choices = filterValues$survival_summary_estimate_name,
-                selected = filterValues$survival_summary_estimate_name,
+                choices = filterValues$survival_estimate_name,
+                selected = filterValues$survival_estimate_name,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               )
@@ -1979,58 +2003,7 @@ ui <- bslib::page_navbar(
           )
         ),
         bslib::navset_tab(
-          bslib::nav_panel(
-            title = "Tidy",
-            bslib::card(
-              full_screen = TRUE,
-              bslib::card_header(
-                # Botón de ayuda "+" 
-                bslib::popover(
-                  trigger = shiny::actionButton(
-                    inputId = "help_survival1",
-                    label = "+",
-                    class = "btn-sm btn-outline-secondary",
-                    style = "border-radius: 50%; width: 28px; height: 28px; padding: 0; font-size: 16px; line-height: 1;"
-                  ),
-                  placement = "right",
-                  title = "What to look at here?",
-                  shiny::p(
-                    style = "font-size: 13px; white-space: pre-wrap; max-width: 280px;",
-                    leer_ayuda("survival1")   
-                  )
-                ),
-                bslib::popover(
-                  shiny::icon("download"),
-                  shiny::downloadButton(outputId = "survival_tidy_download", label = "Download csv")
-                ),
-                class = "text-end"
-              ),
-              bslib::layout_sidebar(
-                sidebar = bslib::sidebar(
-                  open = FALSE,
-                  shinyWidgets::pickerInput(
-                    inputId = "survival_summary_tidy_columns",
-                    label = "Columns",
-                    choices = filterValues$survival_summary_tidy_columns,
-                    selected = c("cdm_name", "target_cohort", "age_gr", "sex", "study_period" , "year", "estimate_name"),
-                    multiple = TRUE,
-                    options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
-                  ),
-                  shiny::radioButtons(
-                    inputId = "survival_summary_tidy_pivot",
-                    label = "Pivot estimates/variables",
-                    choices = c("none", "estimates", "estimates and variables"),
-                    selected = "estimates"
-                  ),
-                  position = "right"
-                ),
-                div(
-                  style = "flex-grow: 1; overflow: auto;",
-                  DT::dataTableOutput("survival_tidy")
-                )
-              )
-            )
-          ),
+          
           bslib::nav_panel(
             title = "Table",
             bslib::card(
@@ -2072,13 +2045,65 @@ ui <- bslib::page_navbar(
                     ),
                     sortable::add_rank_list(
                       text = "hideColumn",
-                      labels = c("cdm_name"),
+                      labels = character(),
                       input_id = "survival_summary_gt_18_hideColumn"
                     )
                   ),
                   position = "right"
                 ),
                 gt::gt_output("survival_summary_gt_18")
+              )
+            )
+          ),
+          bslib::nav_panel(
+            title = "Tidy",
+            bslib::card(
+              full_screen = TRUE,
+              bslib::card_header(
+                # Botón de ayuda "+" 
+                bslib::popover(
+                  trigger = shiny::actionButton(
+                    inputId = "help_survival1",
+                    label = "+",
+                    class = "btn-sm btn-outline-secondary",
+                    style = "border-radius: 50%; width: 28px; height: 28px; padding: 0; font-size: 16px; line-height: 1;"
+                  ),
+                  placement = "right",
+                  title = "What to look at here?",
+                  shiny::p(
+                    style = "font-size: 13px; white-space: pre-wrap; max-width: 280px;",
+                    leer_ayuda("survival1")   
+                  )
+                ),
+                bslib::popover(
+                  shiny::icon("download"),
+                  shiny::downloadButton(outputId = "survival_tidy_download", label = "Download csv")
+                ),
+                class = "text-end"
+              ),
+              bslib::layout_sidebar(
+                sidebar = bslib::sidebar(
+                  open = FALSE,
+                  shinyWidgets::pickerInput(
+                    inputId = "survival_summary_tidy_columns",
+                    label = "Columns",
+                    choices = filterValues$survival_tidy_columns,
+                    selected = c("cdm_name", "target_cohort", "age_gr", "sex", "study_period" , "year", "estimate_name"),
+                    multiple = TRUE,
+                    options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+                  ),
+                  shiny::radioButtons(
+                    inputId = "survival_summary_tidy_pivot",
+                    label = "Pivot estimates/variables",
+                    choices = c("none", "estimates", "estimates and variables"),
+                    selected = "estimates"
+                  ),
+                  position = "right"
+                ),
+                div(
+                  style = "flex-grow: 1; overflow: auto;",
+                  DT::dataTableOutput("survival_tidy")
+                )
               )
             )
           )
@@ -2096,8 +2121,8 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_cdm_name",
                 label = "Cdm name",
-                choices = filterValues$survival_events_grouping_cdm_name,
-                selected = filterValues$survival_events_grouping_cdm_name[1],
+                choices = filterValues$survival_grouping_cdm_name,
+                selected = filterValues$survival_grouping_cdm_name[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -2112,24 +2137,24 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_target_cohort",
                 label = "Target cohort",
-                choices = filterValues$survival_events_grouping_target_cohort,
-                selected = filterValues$survival_events_grouping_target_cohort,
+                choices = filterValues$survival_grouping_target_cohort,
+                selected = filterValues$survival_grouping_target_cohort,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_study_period",
                 label = "Study Period",
-                choices = filterValues$survival_events_grouping_study_period,
-                selected = filterValues$survival_events_grouping_study_period[1],
+                choices = filterValues$survival_grouping_study_period,
+                selected = filterValues$survival_grouping_study_period[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_year",
                 label = "Survival year",
-                choices = filterValues$survival_events_grouping_year,
-                selected = filterValues$survival_events_grouping_year[1],
+                choices = filterValues$survival_grouping_year,
+                selected = filterValues$survival_grouping_year[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               )
@@ -2139,16 +2164,24 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_age_gr",
                 label = "Age group",
-                choices = filterValues$survival_events_grouping_age_gr,
-                selected = filterValues$survival_events_grouping_age_gr[1],
+                choices = filterValues$survival_grouping_age_gr,
+                selected = filterValues$survival_grouping_age_gr[1],
+                multiple = TRUE,
+                options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+              ),
+              shinyWidgets::pickerInput(
+                inputId = "survival_events_grouping_age_gr_broad",
+                label = "Age group broad",
+                choices = filterValues$survival_grouping_age_gr_broad,
+                selected = filterValues$survival_grouping_age_gr_broad[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
                 inputId = "survival_events_grouping_sex",
                 label = "Sex",
-                choices = filterValues$survival_events_grouping_sex,
-                selected = filterValues$survival_events_grouping_sex[1],
+                choices = filterValues$survival_grouping_sex,
+                selected = filterValues$survival_grouping_sex[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -2169,6 +2202,41 @@ ui <- bslib::page_navbar(
           )
         ),
         bslib::navset_tab(
+          bslib::nav_panel(
+            title = "Table",
+            bslib::card(
+              full_screen = TRUE,
+              bslib::card_header(
+                class = "text-end"
+              ),
+              bslib::layout_sidebar(
+                sidebar = bslib::sidebar(
+                  open = FALSE,
+                  sortable::bucket_list(
+                    header = NULL,
+                    sortable::add_rank_list(
+                      text = "none",
+                      labels = c("cdm_name", "age_gr", "sex", "study_period", "year", 
+                                 "target_cohort", filterValues$survival_strata  ),
+                      input_id = "survival_events_gt_18_none"
+                    ),
+                    sortable::add_rank_list(
+                      text = "header",
+                      labels = "estimate_name",
+                      input_id = "survival_events_gt_18_header"
+                    ),
+                    sortable::add_rank_list(
+                      text = "groupColumn",
+                      labels = NULL,
+                      input_id = "survival_events_gt_18_groupColumn"
+                    )
+                  ),
+                  position = "right"
+                ),
+                gt::gt_output("survival_events_gt_18")
+                )
+              )
+          ),
           bslib::nav_panel(
             title = "Tidy",
             bslib::card(
@@ -2201,7 +2269,7 @@ ui <- bslib::page_navbar(
                   shinyWidgets::pickerInput(
                     inputId = "survival_events_tidy_columns",
                     label = "Columns",
-                    choices = filterValues$survival_events_tidy_columns,
+                    choices = filterValues$survival_tidy_columns,
                     selected = c("cdm_name", "target_cohort", "age_gr", "sex", "study_period" , "year", "estimate_name", "time"),
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
@@ -2220,41 +2288,6 @@ ui <- bslib::page_navbar(
                 )
               )
             )
-        ),
-        bslib::nav_panel(
-          title = "Table",
-          bslib::card(
-            full_screen = TRUE,
-            bslib::card_header(
-              class = "text-end"
-            ),
-            bslib::layout_sidebar(
-              sidebar = bslib::sidebar(
-                open = FALSE,
-                sortable::bucket_list(
-                  header = NULL,
-                  sortable::add_rank_list(
-                    text = "none",
-                    labels = c("cdm_name", "age_gr", "sex", "study_period", "year", 
-                               "target_cohort", filterValues$survival_strata  ),
-                    input_id = "survival_events_gt_18_none"
-                  ),
-                  sortable::add_rank_list(
-                    text = "header",
-                    labels = "estimate_name",
-                    input_id = "survival_events_gt_18_header"
-                  ),
-                  sortable::add_rank_list(
-                    text = "groupColumn",
-                    labels = NULL,
-                    input_id = "survival_events_gt_18_groupColumn"
-                  )
-                ),
-                position = "right"
-              ),
-              gt::gt_output("survival_events_gt_18")
-              )
-            )
           )
         )
       )
@@ -2268,15 +2301,15 @@ ui <- bslib::page_navbar(
             bslib::accordion_panel(
               title = "Settings",
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_cdm_name",
+                inputId = "survival_estimates_grouping_cdm_name",
                 label = "Cdm name",
-                choices = filterValues$survival_probability_grouping_cdm_name,
-                selected = filterValues$survival_probability_grouping_cdm_name[1],
+                choices = filterValues$survival_grouping_cdm_name,
+                selected = filterValues$survival_grouping_cdm_name[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_cancer_group",
+                inputId = "survival_estimates_cancer_group",
                 label = "Cancer group",
                 choices = filterValues$cancer_group_names,
                 selected = filterValues$cancer_group_names[1],
@@ -2284,26 +2317,26 @@ ui <- bslib::page_navbar(
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_target_cohort",
+                inputId = "survival_estimates_grouping_target_cohort",
                 label = "Target cohort",
-                choices = filterValues$survival_probability_grouping_target_cohort,
-                selected = filterValues$survival_probability_grouping_target_cohort,
+                choices = filterValues$survival_grouping_target_cohort,
+                selected = filterValues$survival_grouping_target_cohort,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_study_period",
+                inputId = "survival_estimates_grouping_study_period",
                 label = "Study Period",
-                choices = filterValues$survival_probability_grouping_study_period,
-                selected = filterValues$survival_probability_grouping_study_period[1],
+                choices = filterValues$survival_grouping_study_period,
+                selected = filterValues$survival_grouping_study_period[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_year",
+                inputId = "survival_estimates_grouping_year",
                 label = "Survival year",
-                choices = filterValues$survival_probability_grouping_year,
-                selected = filterValues$survival_probability_grouping_year[1],
+                choices = filterValues$survival_grouping_year,
+                selected = filterValues$survival_grouping_year[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               )
@@ -2311,23 +2344,31 @@ ui <- bslib::page_navbar(
             bslib::accordion_panel(
               title = "Strata",
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_age_gr",
+                inputId = "survival_estimates_grouping_age_gr",
                 label = "Age group",
-                choices = filterValues$survival_probability_grouping_age_gr,
-                selected = filterValues$survival_probability_grouping_age_gr[1],
+                choices = filterValues$survival_grouping_age_gr,
+                selected = filterValues$survival_grouping_age_gr[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_grouping_sex",
+                inputId = "survival_estimates_grouping_age_gr_broad",
+                label = "Age group broad",
+                choices = filterValues$survival_grouping_age_gr_broad,
+                selected = filterValues$survival_grouping_age_gr_broad[1],
+                multiple = TRUE,
+                options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
+              ),
+              shinyWidgets::pickerInput(
+                inputId = "survival_estimates_grouping_sex",
                 label = "Sex",
-                choices = filterValues$survival_probability_grouping_sex,
-                selected = filterValues$survival_probability_grouping_sex[1],
+                choices = filterValues$survival_grouping_sex,
+                selected = filterValues$survival_grouping_sex[1],
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
               shinyWidgets::pickerInput(
-                inputId = "survival_probability_strata",
+                inputId = "survival_estimates_strata",
                 label = "Strata variables",
                 choices = filterValues$survival_strata,
                 selected = NULL,  # por defecto ninguna seleccionada = todo overall
@@ -2427,7 +2468,7 @@ ui <- bslib::page_navbar(
               bslib::card_header(
                 bslib::popover(
                   shiny::icon("download"),
-                  shiny::downloadButton(outputId = "survival_probability_tidy_download", label = "Download csv")
+                  shiny::downloadButton(outputId = "survival_estimates_tidy_download", label = "Download csv")
                 ),
                 class = "text-end"
               ),
@@ -2435,15 +2476,15 @@ ui <- bslib::page_navbar(
                 sidebar = bslib::sidebar(
                   open = FALSE,
                   shinyWidgets::pickerInput(
-                    inputId = "survival_probability_tidy_columns",
+                    inputId = "survival_estimates_tidy_columns",
                     label = "Columns",
-                    choices = filterValues$survival_probability_tidy_columns,
+                    choices = filterValues$survival_tidy_columns,
                     selected = c("cdm_name", "target_cohort", "age_gr", "sex", "study_period" , "year", "estimate_name", "time"),
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
                   ),
                   shiny::radioButtons(
-                    inputId = "survival_probability_tidy_pivot",
+                    inputId = "survival_estimates_tidy_pivot",
                     label = "Pivot estimates/variables",
                     choices = c("none", "estimates", "estimates and variables"),
                     selected = "estimates"
@@ -2452,7 +2493,7 @@ ui <- bslib::page_navbar(
                 ),
                 div(
                   style = "flex-grow: 1; overflow: auto;",
-                  DT::dataTableOutput("survival_probability_tidy")
+                  DT::dataTableOutput("survival_estimates_tidy")
                 )
               )
             )
@@ -2471,8 +2512,8 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_attrition_grouping_cdm_name",
                 label = "Cdm name",
-                choices = filterValues$survival_attrition_grouping_cdm_name,
-                selected = filterValues$survival_attrition_grouping_cdm_name,
+                choices = filterValues$survival_grouping_cdm_name,
+                selected = filterValues$survival_grouping_cdm_name,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               ),
@@ -2487,8 +2528,8 @@ ui <- bslib::page_navbar(
               shinyWidgets::pickerInput(
                 inputId = "survival_attrition_grouping_target_cohort",
                 label = "Target cohort",
-                choices = filterValues$survival_attrition_grouping_target_cohort,
-                selected = filterValues$survival_attrition_grouping_target_cohort,
+                choices = filterValues$survival_grouping_target_cohort,
+                selected = filterValues$survival_grouping_target_cohort,
                 multiple = TRUE,
                 options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")
               )
@@ -2528,7 +2569,7 @@ ui <- bslib::page_navbar(
                   shinyWidgets::pickerInput(
                     inputId = "survival_attrition_tidy_columns",
                     label = "Columns",
-                    choices = filterValues$survival_attrition_tidy_columns,
+                    choices = filterValues$survival_tidy_columns,
                     selected = NULL,
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 7, `selected-text-format` = "count > 3",container = "body")

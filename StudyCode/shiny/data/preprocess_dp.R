@@ -26,6 +26,8 @@ for (db in zip_files){
       files <- files[!grepl("snapshot", files)]
       result_load <-  omopgenerics::importSummarisedResult(files) 
     }
+    attr(result_load, "settings") <-  attr(result_load, "settings") |>
+      mutate(cancer_gr = cancer_group)
     message("Bind results  with other groups")
     result_db <- omopgenerics::bind(
       result_db, 
@@ -40,30 +42,22 @@ for (db in zip_files){
 
 #Get results ids for each type of result
 resultList <- omopgenerics::settings(result) %>% 
-  group_by(result_type) %>% 
+  dplyr::mutate(
+    result_type_group = dplyr::if_else(
+      startsWith(result_type, "survival_"),
+      "survival",
+      result_type
+    )
+  ) %>%
+  group_by(result_type_group) %>% 
   summarise(
     result_ids = paste(sort(unique(result_id)), collapse = ","),
     .groups = "drop"
   ) %>%
   mutate(result_ids = strsplit(result_ids, ",")) %>%
   mutate(result_ids = lapply(result_ids, function(x) as.integer(trimws(x)))) %>%
-  { setNames(.$result_ids, .$result_type) }
+  { setNames(.$result_ids, .$result_type_group) }
 
-# Split characteristics into demographics & conditions/drugs 
-if (length(resultList$summarise_characteristics) != 0){
-  if (length(resultList$summarise_characteristics) == 1){
-    resultList[["summarise_characteristics_demographics"]] <- resultList$summarise_characteristics[1]
-    resultList[["summarise_characteristics_clinical"]]     <- resultList$summarise_characteristics[1]
-    resultList[["summarise_characteristics"]]   <- NULL
-    
-  }else if (length(resultList$summarise_characteristics) == 2) {
-    resultList[["summarise_characteristics_demographics"]] <- resultList$summarise_characteristics[1]
-    resultList[["summarise_characteristics_clinical"]]     <- resultList$summarise_characteristics[2]
-    resultList[["summarise_characteristics"]]   <- NULL
-  }else{
-    errorCondition(message = "summarise characteristics results are not merged")
-  }
-}
 
 # Process data and save results in .Rdata file 
 data <- prepareResult(result, resultList)
@@ -83,38 +77,34 @@ if(length(inc_strata)==0){
   filterValues$incidence_strata <- incidence_strata
 }
 
-# Bind survival results for plotting
-survival_res <- names(data)[startsWith(names(data), "survival_")]
-if (length(survival_res) > 0) {
-  data$survival <- do.call(
-    omopgenerics::bind,
-    lapply(survival_res, function(x) data[[x]])
-  )
-  #correct age_gr and sex values
-  strataCols <- visOmopResults::strataColumns(data$survival)
-  if("sex" %in% strataCols & "age_gr" %in% strataCols){
-    data$survival <- data$survival |> 
-      omopgenerics::splitStrata() |> 
-      mutate(
-        sex     = stringr::str_trim(sex, side = "right"),
-        age_gr  = stringr::str_trim(age_gr, side = "right")  
-      ) |> 
-      omopgenerics::uniteStrata(strataCols)
+# survival results
+if("survival" %in% names(data)){
+    #correct age_gr and sex values
+    strataCols <- visOmopResults::strataColumns(data$survival)
+    if("sex" %in% strataCols & "age_gr" %in% strataCols & "age_gr_broad" %in% strataCols){
+      data$survival <- data$survival |>
+        omopgenerics::splitStrata() |>
+        mutate(
+          sex     = stringr::str_trim(sex, side = "right"),
+          age_gr  = stringr::str_trim(age_gr, side = "right"),
+          age_gr_broad  = stringr::str_trim(age_gr_broad, side = "right")
+        ) |>
+        omopgenerics::uniteStrata(strataCols)
 
-    survival_res <- survival_res[!grepl("attrition", survival_res)]
-    var_adj <- c(glue::glue("{survival_res}_grouping_sex"), glue::glue("{survival_res}_grouping_age_gr"))
-    filterValues[var_adj] <- lapply(filterValues[var_adj], function(x) unique(stringr::str_trim(x, side = "right")))
-  }
-  
-  if("survival_summary" %in% survival_res){
-    cols <- visOmopResults::strataColumns(data$survival_summary)
+      var_adj <- c("survival_grouping_sex", "survival_grouping_age_gr", "survival_grouping_age_gr_broad")
+      filterValues[var_adj] <- lapply(filterValues[var_adj], function(x) unique(stringr::str_trim(x, side = "right")))
+    }
+
+    # create list of strata values
+    cols <- visOmopResults::strataColumns(data$survival)
     if(length(cols) != 0){
-      filterValues$survival_strata <- cols[!grepl(paste(exclude_patterns, collapse = "|"), cols)]
+      filterValues$survival_strata <- cols[!grepl(paste(c(exclude_patterns, "reason"), collapse = "|"), cols)]
     }else{
       filterValues$survival_strata <- NULL
     }
-  }
+  
 }
+
 
 # Group cancers and stratification
 source(here::here("cancerGroups.R"))

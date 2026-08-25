@@ -355,7 +355,9 @@ server <- function(input, output, session) {
   #tidy summarise_characteristics 
   getTidyDataSummariseCharacteristicsDemographics <- shiny::reactive({
     res <- data |>
-      filterData("summarise_characteristics_demographics", input) |>
+      filterData("summarise_characteristics", input, "summarise_characteristics_demographics") |> 
+      omopgenerics::filter(!grepl("Condit|Medicat", variable_name)) |> 
+      # filterData("summarise_characteristics_demographics", input) |>
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")
@@ -403,7 +405,10 @@ server <- function(input, output, session) {
   #table characteristics
   createOutputCharactDemo <- shiny::reactive({
     result <- data |>
-      filterData("summarise_characteristics_demographics", input)
+      # filterData("summarise_characteristics_demographics", input)
+      filterData("summarise_characteristics", input, "summarise_characteristics_demographics")|> 
+      omopgenerics::filterSettings(additional == "")
+      
     #filter group of cancer
     all_types <- unique(unlist(lapply(
       data$cancer_group_strata[input$summarise_characteristics_demographics_cancer_group], 
@@ -432,7 +437,10 @@ server <- function(input, output, session) {
   ##plot cohort demographcis
   createOutputCharactPlotDemo <- shiny::reactive({
     result <- data |>
-      filterData("summarise_characteristics_demographics", input)
+      # filterData("summarise_characteristics_demographics", input)
+      filterData("summarise_characteristics", input, "summarise_characteristics_demographics")|> 
+      omopgenerics::filterSettings(additional == "")
+    
     #filter group of cancer
     all_types <- unique(unlist(lapply(
       data$cancer_group_strata[input$summarise_characteristics_demographics_cancer_group], 
@@ -470,7 +478,9 @@ server <- function(input, output, session) {
   #tidy summarise_characteristics 
   getTidyDataSummariseCharacteristicsClinical <- shiny::reactive({
     res <- data |>
-      filterData("summarise_characteristics_clinical", input) |>
+      # filterData("summarise_characteristics_clinical", input) |>
+      filterData("summarise_characteristics", input, "summarise_characteristics_clinical") |>
+      omopgenerics::filter(grepl("Condit|Medicat", variable_name)) |> 
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")
@@ -517,7 +527,9 @@ server <- function(input, output, session) {
   #Table summarise_characteristics_clinical
   createOutputCharactCli <- shiny::reactive({
     result <- data |>
-      filterData("summarise_characteristics_clinical", input)
+      # filterData("summarise_characteristics_clinical", input) |> 
+      filterData("summarise_characteristics", input, "summarise_characteristics_clinical") |>
+      omopgenerics::filter(grepl("Condit|Medicat", variable_name)) 
     #filter group of cancer
     all_types <- unique(unlist(lapply(
       data$cancer_group_strata[input$summarise_characteristics_clinical_cancer_group], 
@@ -1042,7 +1054,9 @@ server <- function(input, output, session) {
   ##survival summary tidy
   getTidyDataSurvivalSummary <- shiny::reactive({
     res <- data |>
-      filterData("survival_summary", input) |>
+      # filterData("survival_summary", input) |>
+      filterData("survival", input, "survival_summary") |>
+      omopgenerics::filterSettings(result_type == "survival_summary") |> 
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")
@@ -1116,6 +1130,7 @@ server <- function(input, output, session) {
       omopgenerics::filterStrata(
         sex %in% input$survival_summary_grouping_sex,
         age_gr %in% input$survival_summary_grouping_age_gr,
+        age_gr_broad %in% input$survival_summary_grouping_age_gr_broad,
         study_period %in% input$survival_summary_grouping_study_period,
         year %in% input$survival_summary_grouping_year
       ) 
@@ -1130,11 +1145,28 @@ server <- function(input, output, session) {
           )
       }
     }
-    CohortSurvival::tableSurvival(
+    # CohortSurvival::tableSurvival(
+    #   result,
+    #   header = input$survival_summary_gt_18_header,
+    #   groupColumn = input$survival_summary_gt_18_groupColumn
+    # )
+    
+    tbl <- CohortSurvival::tableSurvival(
       result,
       header = input$survival_summary_gt_18_header,
       groupColumn = input$survival_summary_gt_18_groupColumn
     )
+    
+    if (length(input$survival_summary_gt_18_hideColumn)!=0) {
+      hide_cols_formatted <- input$survival_summary_gt_18_hideColumn |>
+        stringr::str_replace_all("_", " ") |>
+        stringr::str_to_sentence()
+      
+      tbl <- tbl |> gt::cols_hide(columns = hide_cols_formatted)
+    }
+    
+    tbl
+    
   })
   output$survival_summary_gt_18 <- gt::render_gt({
     createOutputSurv()
@@ -1145,7 +1177,9 @@ server <- function(input, output, session) {
   #survival events tidy 
   getTidyDataSurvivalRisk <-  shiny::reactive({
     res <- data |>
-      filterData("survival_events", input) |>
+      # filterData("survival_events", input) |>
+      filterData("survival", input, "survival_events") |>
+      omopgenerics::filterSettings(result_type == "survival_events") |>
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")
@@ -1213,6 +1247,7 @@ server <- function(input, output, session) {
       omopgenerics::filterStrata(
         sex %in% input$survival_events_grouping_sex,
         age_gr %in% input$survival_events_grouping_age_gr,
+        age_gr_broad %in% input$survival_events_grouping_age_gr_broad,
         study_period %in% input$survival_events_grouping_study_period,
         year %in% input$survival_events_grouping_year
       ) 
@@ -1243,21 +1278,23 @@ server <- function(input, output, session) {
   ##tidy table
   getTidyDataSurvivalProb <-  shiny::reactive({
     res <- data |>
-      filterData("survival_probability", input) |>
+      # filterData("survival_estimates", input) |>
+      filterData("survival", input, "survival_estimates") |>
+      omopgenerics::filterSettings(result_type == "survival_estimates") |>
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")
     
     #filter group of cancer
     all_types <- unique(unlist(lapply(
-      data$cancer_group_strata[input$survival_probability_cancer_group], 
+      data$cancer_group_strata[input$survival_estimates_cancer_group], 
       `[[`, "types"
     )))
     res <- res |>
       dplyr::filter( target_cohort %in% all_types)
     
     #Filter survival strata
-    colsToFilter <- setdiff(filterValues$survival_strata, input$survival_probability_strata)
+    colsToFilter <- setdiff(filterValues$survival_strata, input$survival_estimates_strata)
     if(length(colsToFilter) != 0){
       res <- res |>
         dplyr::filter(
@@ -1271,10 +1308,10 @@ server <- function(input, output, session) {
     #columns to eliminate
     colsEliminate <- colnames(res)
     colsEliminate <- colsEliminate[!colsEliminate %in% c(
-      input$survival_probability_tidy_columns, input$survival_probability_strata, "estimate_value"
+      input$survival_estimates_tidy_columns, input$survival_estimates_strata, "estimate_value"
     )]
     #pivot
-    pivot <- input$survival_probability_tidy_pivot
+    pivot <- input$survival_estimates_tidy_pivot
     if (pivot != "none") {
       vars <- switch(pivot,
                      "estimates" = "estimate_name",
@@ -1286,7 +1323,7 @@ server <- function(input, output, session) {
     res |>
       dplyr::select(!dplyr::any_of(colsEliminate))
   })
-  output$survival_probability_tidy <- DT::renderDT({
+  output$survival_estimates_tidy <- DT::renderDT({
     DT::datatable(
       getTidyDataSurvivalProb(),
       options = list(scrollX = TRUE),
@@ -1298,32 +1335,31 @@ server <- function(input, output, session) {
   createOutputSurvPlot <- shiny::reactive({
     #filter group of cancer
     all_types <- unique(unlist(lapply(
-      data$cancer_group_strata[input$survival_probability_cancer_group], 
+      data$cancer_group_strata[input$survival_estimates_cancer_group], 
       `[[`, "types"
     )))
     #results
     result <- data$survival |> 
-      dplyr::filter(cdm_name %in% input$survival_probability_grouping_cdm_name) |> 
+      dplyr::filter(cdm_name %in% input$survival_estimates_grouping_cdm_name) |> 
       omopgenerics::filterGroup(target_cohort %in% all_types) |>
       omopgenerics::filterGroup(
-        target_cohort %in% input$survival_probability_grouping_target_cohort
+        target_cohort %in% input$survival_estimates_grouping_target_cohort
       ) |> 
       omopgenerics::filterStrata(
-        sex %in% input$survival_probability_grouping_sex,
-        age_gr %in% input$survival_probability_grouping_age_gr,
-        study_period %in% input$survival_probability_grouping_study_period,
-        year %in% input$survival_probability_grouping_year
+        sex %in% input$survival_estimates_grouping_sex,
+        age_gr %in% input$survival_estimates_grouping_age_gr,
+        age_gr_broad %in% input$survival_estimates_grouping_age_gr_broad,
+        study_period %in% input$survival_estimates_grouping_study_period,
+        year %in% input$survival_estimates_grouping_year
       ) 
     #Filter survival strata
-    colsToFilter <- setdiff(filterValues$survival_strata, input$survival_probability_strata)
+    colsToFilter <- setdiff(filterValues$survival_strata, input$survival_estimates_strata)
     if (length(colsToFilter) > 0) {
-      for (col in colsToFilter) {
-        result <- result |>
-          omopgenerics::filterStrata(
-            # !!rlang::sym(col) %in% "overall"
-            !grepl(paste(colsToFilter, collapse = "|"), strata_name)
-          )
-      }
+      result <- result |>
+        omopgenerics::filterStrata(
+          # !!rlang::sym(col) %in% "overall"
+          !grepl(paste(colsToFilter, collapse = "|"), strata_name)
+        )
     }
     # result <- data |>
     #   filterData("survival", input)
@@ -1358,7 +1394,9 @@ server <- function(input, output, session) {
   ##tidy survival_attrition 
   getTidyDataSurvivalAttrition <- shiny::reactive({
     res <- data |>
-      filterData("survival_attrition", input) |>
+      # filterData("survival_attrition", input) |>
+      filterData("survival", input, "survival_attrition") |>
+      omopgenerics::filterSettings(result_type == "survival_attrition") |>
       omopgenerics::addSettings() |>
       omopgenerics::splitAll() |>
       dplyr::select(!"result_id")

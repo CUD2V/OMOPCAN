@@ -1,7 +1,12 @@
 filterData <- function(result,
                        prefix,
-                       input) {
+                       input,
+                       prefix_surv = NULL) {
   result <- result[[prefix]]
+  
+  if(!is.null(prefix_surv)){
+    prefix = prefix_surv
+  }
   
   if (nrow(result) == 0) {
     return(omopgenerics::emptySummarisedResult())

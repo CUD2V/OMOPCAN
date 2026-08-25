@@ -1,0 +1,12 @@
+name: OMOPCAN-SIDIAP-vf
+title: OMOPCAN-SIDIAP-vf
+username: idiapjgol-rwepi
+account: idiapjgol-rwepi
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17297756
+bundleId: 11950840
+url: https://idiapjgol-rwepi.shinyapps.io/OMOPCAN-SIDIAP-vf/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
