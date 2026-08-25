@@ -158,6 +158,12 @@ if (any(cancer_counts$number_subjects > minimum_counts, na.rm = TRUE)) {
       if (executeCharacterisation) {
         log4r::info(logger, "STEP 2 COHORT CHARACTERISATION -----------------------")
         source(here::here("extras/2_Characterisation/characterisation.R"))
+        
+        # if(grepl("YUHS", db_name, ignore.case=TRUE)){
+        #   source(here::here("extras/2_Characterisation/characterisation_YUHS.R"))
+        # }else{
+        #   source(here::here("extras/2_Characterisation/characterisation.R"))
+        # }
       }
       if (executeIncidence) {
         log4r::info(logger, "STEP 3 INCIDENCE -------------------------------------")
