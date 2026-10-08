@@ -53,6 +53,11 @@ results_database_schema <- "..."
 # Note, any existing tables in your results schema with the same name will be overwritten
 cohortTableStem <- "..."
 
+# --- Optional: source a gitignored site_config.R for credentials/schemas ----
+# Copy site_config_template.R to site_config.R and fill in your values.
+# Settings defined above serve as defaults; site_config.R values take precedence.
+if (file.exists(here("site_config.R"))) source(here("site_config.R"))
+
 # Run analysis ----
 source(here("RunAnalysis.R"), echo=TRUE)
 
