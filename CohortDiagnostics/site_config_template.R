@@ -9,6 +9,13 @@
 #   1. gcloud auth application-default login   (run once in terminal)
 #   2. BQ_DRIVER_PATH env var in ~/.Renviron pointing to Simba JDBC driver dir
 #      e.g.  BQ_DRIVER_PATH="/path/to/jdbc/bigquery-driver"
+#
+# renv setup note:
+#   The renv.lock pins the Posit package manager, which may be unreachable on
+#   some servers. If renv::restore() times out, run from an R shell (not
+#   RStudio) and override the repo before restoring:
+#     options(renv.config.repos.override = c(CRAN = "https://cloud.r-project.org"))
+#     renv::restore()
 
 # --- Database connection ------------------------------------------------------
 connectionDetails <- DatabaseConnector::createConnectionDetails(
